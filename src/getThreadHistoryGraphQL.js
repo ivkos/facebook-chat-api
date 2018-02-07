@@ -56,18 +56,18 @@ function formatAttachmentsGraphQLResponse(attachment) {
         largePreviewHeight: attachment.large_preview.height,
         largePreviewWidth: attachment.large_preview.width,
       };
-    case "MessageAnimatedImage": 
+    case "MessageAnimatedImage":
       return {
         type: "image",
         filename: attachment.filename,
         attachmentID: attachment.legacy_attachment_id,
-        previewHeight: attachment.preview_image.height, 
-        previewUrl: attachment.preview_image.uri, 
-        previewWidth: attachment.preview_image.width, 
-        largePreviewUrl: attachment.animated_image.uri, 
+        previewHeight: attachment.preview_image.height,
+        previewUrl: attachment.preview_image.uri,
+        previewWidth: attachment.preview_image.width,
+        largePreviewUrl: attachment.animated_image.uri,
         largePreviewHeight: attachment.animated_image.height,
         largePreviewWidth: attachment.animated_image.width,
-	
+
         attributionApp: attachment.attribution_app ? {
           attributionAppID: attachment.attribution_app.id,
           name: attachment.attribution_app.name,
@@ -147,20 +147,20 @@ function formatExtensibleAttachment(attachment) {
       target:"",
 
       type: "share",
-      description: (attachment.story_attachment.description == null) ? null : attachment.story_attachment.description.text,
+      description: attachment.story_attachment.description && attachment.story_attachment.description.text,
       attachmentID: attachment.legacy_attachment_id,
       title: attachment.story_attachment.title_with_entities.text,
       subattachments: attachment.story_attachment.subattachments,
       url: attachment.story_attachment.url,
-      source: (attachment.story_attachment.source == null) ? null : attachment.story_attachment.source.text,
-      playable: (attachment.story_attachment.media == null) ? null : attachment.story_attachment.media.is_playable,
-      
+      source: (attachment.story_attachment.source != null ? attachment.story_attachment.source.text : ""),
+      playable: (attachment.story_attachment.media != null ? attachment.story_attachment.media.is_playable : ""),
+
       // New
-      thumbnailUrl: (attachment.story_attachment.media == null) ? null : (attachment.story_attachment.media.animated_image == null && attachment.story_attachment.media.image == null) ? null : (attachment.story_attachment.media.animated_image || attachment.story_attachment.media.image).uri,
-      thumbnailWidth: (attachment.story_attachment.media == null) ? null : (attachment.story_attachment.media.animated_image == null && attachment.story_attachment.media.image == null) ? null :  (attachment.story_attachment.media.animated_image || attachment.story_attachment.media.image).width,
-      thumbnailHeight: (attachment.story_attachment.media == null) ? null : (attachment.story_attachment.media.animated_image == null && attachment.story_attachment.media.image == null) ? null :  (attachment.story_attachment.media.animated_image || attachment.story_attachment.media.image).height,
-      duration: (attachment.story_attachment.media == null) ? null : attachment.story_attachment.media.playable_duration_in_ms,
-      playableUrl: (attachment.story_attachment.media == null) ? null : attachment.story_attachment.media.playable_url,
+      thumbnailUrl: (attachment.story_attachment.media != null ? (attachment.story_attachment.media.animated_image || attachment.story_attachment.media.image).uri : ""),
+      thumbnailWidth: (attachment.story_attachment.media != null ? (attachment.story_attachment.media.animated_image || attachment.story_attachment.media.image).width : ""),
+      thumbnailHeight: (attachment.story_attachment.media != null ? (attachment.story_attachment.media.animated_image || attachment.story_attachment.media.image).height : ""),
+      duration: (attachment.story_attachment.media != null ? attachment.story_attachment.media.playable_duration_in_ms : ""),
+      playableUrl: (attachment.story_attachment.media != null ? attachment.story_attachment.media.playable_url : ""),
       
       // Format example:
       // 
@@ -194,9 +194,9 @@ function formatReactionsGraphQL(reaction) {
 
 function formatEventData(event) {
   if(event == null) {
-    return {};  
+    return {};
   }
-  
+
   switch (event.__typename) {
     case "ThemeColorExtensibleMessageAdminText":
       return {
@@ -222,13 +222,13 @@ function formatEventData(event) {
     case "GameScoreExtensibleMessageAdminText":
       return {
         game_type: event.game_type,
-      }	  
+      }
     case "RtcCallLogExtensibleMessageAdminText":
       return {
         event: event.event,
         is_video_call: event.is_video_call,
         server_info_data: event.server_info_data,
-      }	
+      }
     case "GroupPollExtensibleMessageAdminText":
       return {
         event_type: event.event_type,
@@ -241,10 +241,10 @@ function formatEventData(event) {
     case "StartedSharingVideoExtensibleMessageAdminText":
     case "LightweightEventCreateExtensibleMessageAdminText":
     case "LightweightEventNotifyExtensibleMessageAdminText":
-    case "LightweightEventNotifyBeforeEventExtensibleMessageAdminText":	
+    case "LightweightEventNotifyBeforeEventExtensibleMessageAdminText":
     case "LightweightEventUpdateTitleExtensibleMessageAdminText":
     case "LightweightEventUpdateTimeExtensibleMessageAdminText":
-    case "LightweightEventUpdateLocationExtensibleMessageAdminText": 
+    case "LightweightEventUpdateLocationExtensibleMessageAdminText":
     case "LightweightEventDeleteExtensibleMessageAdminText":
       return {}
     default:
@@ -399,8 +399,8 @@ module.exports = function(defaultFuncs, api, ctx) {
     var form = {
       "queries": JSON.stringify({
         "o0":{
-          // This doc_id was valid on July 15th 2017.
-          "doc_id":"1527774147243246",
+          // This doc_id was valid on February 2nd 2017.
+          "doc_id":"1498317363570230",
           "query_params":{
             "id": threadID,
             "message_limit": amount,
