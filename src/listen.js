@@ -8,6 +8,7 @@ var identity = function() {};
 
 module.exports = function(defaultFuncs, api, ctx) {
   var currentlyRunning = null;
+  var currentListenPromise;
   var globalCallback = identity;
 
   var stopListening = function() {
@@ -15,6 +16,10 @@ module.exports = function(defaultFuncs, api, ctx) {
     if(currentlyRunning) {
       clearTimeout(currentlyRunning);
       currentlyRunning = null;
+    }
+
+    if(currentListenPromise) {
+      currentListenPromise.cancel();
     }
   };
 
@@ -90,7 +95,8 @@ module.exports = function(defaultFuncs, api, ctx) {
     prev = ~~(Date.now() / 1000);
     var presence = utils.generatePresence(ctx.userID);
     ctx.jar.setCookie("presence=" + presence + "; path=/; domain=.facebook.com; secure", "https://www.facebook.com");
-    utils.get("https://"+serverNumber+"-edge-chat.facebook.com/pull", ctx.jar, form)
+
+    currentListenPromise = utils.get("https://"+serverNumber+"-edge-chat.facebook.com/pull", ctx.jar, form)
     .then(utils.parseAndCheckLogin(ctx, defaultFuncs))
     .then(function(resData) {
       var now = Date.now();
@@ -171,7 +177,7 @@ module.exports = function(defaultFuncs, api, ctx) {
                       type: "parse_error",
                     });
                   }
-                  
+
                   if(formattedPresence != null) {
                     globalCallback(null, formattedPresence);
                   }

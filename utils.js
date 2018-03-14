@@ -1,7 +1,11 @@
 "use strict";
 
 var bluebird = require("bluebird");
-var request = bluebird.promisify(require("request").defaults({jar: true}));
+var request = require('request-promise').defaults({
+    jar: true,
+    simple: false,
+    resolveWithFullResponse: true
+});
 var stream = require('stream');
 var log = require('npmlog');
 
@@ -43,7 +47,7 @@ function get(url, jar, qs) {
     gzip: true
   };
 
-  return request(op).then(function(res) {return res[0];});
+  return request(op);
 }
 
 function post(url, jar, form) {
@@ -57,7 +61,7 @@ function post(url, jar, form) {
     gzip: true
   };
 
-  return request(op).then(function(res) {return res[0];});
+    return request(op);
 }
 
 function postFormData(url, jar, form, qs) {
@@ -74,7 +78,7 @@ function postFormData(url, jar, form, qs) {
     gzip: true
   };
 
-  return request(op).then(function(res) {return res[0];});
+    return request(op);
 }
 
 function padZeros(val, len) {
