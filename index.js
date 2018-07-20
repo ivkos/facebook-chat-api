@@ -87,6 +87,7 @@ function buildAPI(globalOptions, html, jar) {
     'deleteMessage',
     'deleteThread',
     'forwardAttachment',
+    'getCurrentUserAccessToken',
     'getCurrentUserID',
     'getEmojiUrl',
     'getFriendsList',
