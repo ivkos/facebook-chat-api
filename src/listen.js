@@ -18,7 +18,7 @@ module.exports = function(defaultFuncs, api, ctx) {
       currentlyRunning = null;
     }
 
-    if(currentListenPromise) {
+    if (currentListenPromise) {
       currentListenPromise.cancel();
     }
   };
@@ -106,7 +106,7 @@ module.exports = function(defaultFuncs, api, ctx) {
       "presence=" + presence + "; path=/; domain=.facebook.com; secure",
       "https://www.facebook.com"
     );
-    currentListenPromise = utils
+    currentListenPromise = defaultFuncs
       .get(
         "https://" + serverNumber + "-edge-chat.facebook.com/pull",
         ctx.jar,
